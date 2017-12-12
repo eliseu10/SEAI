@@ -8,29 +8,38 @@ namespace SEIA
 		
 		public static void Main (string[] args)
 		{
-			/*
-			var connString = ;
-			var conn = new NpgsqlConnection (connString);
-			conn.Open ();
-			var cmd = new NpgsqlCommand ("SELECT count(*) FROM equipments", conn);
-			Int64 count = (Int64)cmd.ExecuteScalar();
+			//--------------------------------
+			// Teste de acesso à Base de Dados
+			//--------------------------------
+			Console.WriteLine("----------------------\nTeste da Base de Dados \n----------------------\n");
+			DBConnect dbconnect = new DBConnect();
 
-			Console.Write("{0}\n", count);
-			conn.Close();*/
+			// Teste nº falhas equipamentos 1 ao 4
+			if(true)
+			{
+				dbconnect.NumberFlaws(1); // 1 erro
+				dbconnect.NumberFlaws(2); // 2 erros
+				dbconnect.NumberFlaws(3); // sem erros
+				dbconnect.NumberFlaws(4); // n existe
+			}
 
+			// Teste idade equipamentos 1 ao 4
+			if(true)
+			{
+				dbconnect.Age(1); // 3 anos
+				dbconnect.Age(2); // 1 ano
+				dbconnect.Age(3); // 1 ano
+				dbconnect.Age(4); // n existe
+			}
 
-			DataBase db = new DataBase ();
-			Int64 age = db.SearchAge (1);
-			Console.WriteLine ("Idade: " + age);
+			if(true)
+			{
+				dbconnect.insertEquipment (3,"DisjuntorDoCanto",1999);
+			}
 
-			Int64 nFlaws = db.SearchNumberFlaws(1);
-			Console.WriteLine ("N Relatorios: " + nFlaws);
-
-			Int64 nMaxFlaws = db.SearchMaxNumberFlaws();
-			Console.WriteLine ("N Maximo Relatorios: " + nMaxFlaws);
-
-			//Console.WriteLine (age.ToString() );
-
+			// Keep the console window open in debug mode.
+			Console.WriteLine("\nPress any key to exit.");
+			Console.ReadKey();
 		}
 	}
 }
