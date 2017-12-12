@@ -138,6 +138,12 @@ namespace SEIA
 			return maxNflaws;
 		}
 
+		//Pesquisar Maximo de operações (datasheet)
+		//Pesquisar Maximo de ativações (datasheet)
+		//Pesquisar Nºativações
+		//Pesquisar Nºoperações
+	
+
 
 		/********************************** Edition Functions **********************************/
 		//Adicionar/Remover Falha (!)
@@ -196,6 +202,70 @@ namespace SEIA
 			cmd.ExecuteNonQuery();
 			Console.WriteLine($"Foi removido o equipamento com o ID {equipmentID}.");
 			this.CloseConn();
+			return 0;
+		}
+
+		//Inserir data da ultima utilizacao
+		public int insertLastUseDate(int equipmentID, String dateS){
+			this.OpenConn();
+			if (VerifyId(equipmentID, "Equipments") == false)
+			{
+				this.CloseConn();
+				return -1;
+			}
+			DateTime datef = DateTime.ParseExact(dateS,"dd.M.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+			string query = $"UPDATE \"SEAI\".\"Equipments\" SET \"LastUse\" = '{datef}' WHERE \"SEAI\".\"Equipments\".\"ID\"={equipmentID};";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			cmd.ExecuteNonQuery();
+			Console.WriteLine($"Foi atalizada a data da ultima utilizacao do equipamento com o ID {equipmentID} para {dateS}.");
+			this.CloseConn();
+
+			this.CloseConn();
+			return 0;
+		}
+
+		//Incrementar Nºativações
+		public int incrementActivations(int equipmentID){
+			int nActivations = 0;
+			//chamar a funcao aqui nActivations = SearchActivations(int equipmentID);
+			nActivations++;
+
+			this.OpenConn();
+			if (VerifyId(equipmentID, "Equipments") == false)
+			{
+				this.CloseConn();
+				return -1;
+			}
+
+			string query = $"UPDATE \"SEAI\".\"Equipments\" SET \"NumberActivations\" = '{nActivations}' WHERE \"SEAI\".\"Equipments\".\"ID\"={equipmentID};";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			cmd.ExecuteNonQuery();
+			Console.WriteLine($"Foi incrementado o nºativaçoes para {nActivations} no equipamento: {equipmentID}");
+			this.CloseConn();
+
+			return 0;
+		}
+
+		//Incrementar Nºoperações
+		public int incrementOperations(int equipmentID){
+			this.OpenConn();
+			if (VerifyId(equipmentID, "Equipments") == false)
+			{
+				this.CloseConn();
+				return -1;
+			}
+
+			int nOperations = 0;
+			//chamar a funcao aqui nOperations = SearchOperations(int equipmentID);
+			nOperations++;
+
+			string query = $"UPDATE \"SEAI\".\"Equipments\" SET \"NumberOperations\" = '{nOperations}' WHERE \"SEAI\".\"Equipments\".\"ID\"={equipmentID};";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			cmd.ExecuteNonQuery();
+			Console.WriteLine($"Foi incrementado o nºoperaçoes para {nOperations} no equipamento: {equipmentID}");
+			this.CloseConn();
+
 			return 0;
 		}
 

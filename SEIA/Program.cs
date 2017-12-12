@@ -19,6 +19,8 @@ namespace SEIA
 			dbconnect.insertEquipment (2,"Disj",2010,34,54);
 			dbconnect.insertEquipment (3,"DisjDoCanto",2001,56,67);
 
+			dbconnect.insertLastUseDate (3,"10.02.2010 12:02:59");
+
 			dbconnect.insertFlaw (3,1,3);
 			dbconnect.removeFlaw (2);
 
