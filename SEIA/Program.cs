@@ -14,10 +14,10 @@ namespace SEIA
 			Console.WriteLine("----------------------\nTeste da Base de Dados \n----------------------\n");
 			DBConnect dbconnect = new DBConnect();
 
-			dbconnect.insertEquipment (0,"D",1990);
-			dbconnect.insertEquipment (3,"Disjuntor",1991);
-			dbconnect.insertEquipment (2,"Disj",2010);
-			dbconnect.insertEquipment (3,"DisjDoCanto",2001);
+			dbconnect.insertEquipment (0,"D",1990,20,30);
+			dbconnect.insertEquipment (3,"Disjuntor",1991,30,23);
+			dbconnect.insertEquipment (2,"Disj",2010,34,54);
+			dbconnect.insertEquipment (3,"DisjDoCanto",2001,56,67);
 
 			dbconnect.insertFlaw (3,1,3);
 			dbconnect.removeFlaw (2);

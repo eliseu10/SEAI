@@ -174,12 +174,12 @@ namespace SEIA
 		}
 			
 		//Adicionar/Remover Equipamento (!)
-		public void insertEquipment(int type, String name, int year){
+		public void insertEquipment(int type, String name, int year, int maxact, int maxope){
 			this.OpenConn();
-			string query = $"INSERT INTO \"SEAI\".\"Equipments\" (\"Type\", \"Name\", \"Year\") VALUES ({type},'{name}',{year});";
+			string query = $"INSERT INTO \"SEAI\".\"Equipments\" (\"Type\", \"Name\", \"Year\",\"MaxActivations\",\"MaxOperations\") VALUES ({type},'{name}',{year},{maxact},{maxope});";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			cmd.ExecuteNonQuery();
-			Console.WriteLine($"Foi inserido equipamento {name}, do tipo {type}, do ano de {year}.");
+			Console.WriteLine($"Foi inserido equipamento {name}, do tipo {type}, do ano de {year}, com maxino de ativações {maxact} e operações {maxope}.");
 			this.CloseConn();
 		}
 
