@@ -14,6 +14,11 @@ namespace SEIA
 			Console.WriteLine("----------------------\nTeste da Base de Dados \n----------------------\n");
 			DBConnect dbconnect = new DBConnect();
 
+			dbconnect.insertEquipment (0,"D",1990);
+			dbconnect.insertEquipment (3,"Disjuntor",1991);
+			dbconnect.insertEquipment (2,"Disj",2010);
+			dbconnect.insertEquipment (3,"DisjDoCanto",2001);
+
 			// Teste nº falhas equipamentos 1 ao 4
 			if(true)
 			{
@@ -31,11 +36,9 @@ namespace SEIA
 				dbconnect.Age(3); // 1 ano
 				dbconnect.Age(4); // n existe
 			}
-
-			if(true)
-			{
-				dbconnect.insertEquipment (3,"DisjuntorDoCanto",1999);
-			}
+				
+			dbconnect.removeEquipment (1);
+			dbconnect.removeEquipment (2);
 
 			// Keep the console window open in debug mode.
 			Console.WriteLine("\nPress any key to exit.");

@@ -175,7 +175,9 @@ namespace SEIA
 		/********************************** Edition Functions **********************************/
 		//Adicionar/Remover Falha (!)
 		public void insertFlaw(int flawID, int equipmentID, int cause, int seriousness){
-
+			/*
+			 * INSERT INTO "SEAI"."Flaws" ("EquipmentID", "Cause", "Seriousness")
+VALUES (2,2,4); */
 		}
 
 		public void removeFlaw(int flawID){
@@ -185,7 +187,7 @@ namespace SEIA
 		//Adicionar/Remover Equipamento (!)
 		public void insertEquipment(int type, String name, int year){
 			this.OpenConn();
-			string query = $"INSERT INTO \"SEAI\".\"Equipments\" (\"Type\", \"Name\", \"Year\")\nVALUES ({type},'{name}',{year});";
+			string query = $"INSERT INTO \"SEAI\".\"Equipments\" (\"Type\", \"Name\", \"Year\") VALUES ({type},'{name}',{year});";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			cmd.ExecuteNonQuery();
 			Console.WriteLine($"Foi inserido equipamento {name}, do tipo {type}, do ano de {year}.");
@@ -193,7 +195,12 @@ namespace SEIA
 		}
 
 		public void removeEquipment(int equipmentID){
-
+			this.OpenConn();
+			string query = $"DELETE FROM \"SEAI\".\"Equipments\" WHERE \"Equipments\".\"ID\" = {equipmentID};";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			cmd.ExecuteNonQuery();
+			Console.WriteLine($"Foi removido o equipamento com o ID {equipmentID}.");
+			this.CloseConn();
 		}
 
 		//Atualizar Equipamento (!)
