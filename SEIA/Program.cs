@@ -19,6 +19,9 @@ namespace SEIA
 			dbconnect.insertEquipment (2,"Disj",2010);
 			dbconnect.insertEquipment (3,"DisjDoCanto",2001);
 
+			dbconnect.insertFlaw (3,1,3);
+			dbconnect.removeFlaw (2);
+
 			// Teste nº falhas equipamentos 1 ao 4
 			if(true)
 			{

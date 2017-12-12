@@ -123,65 +123,54 @@ namespace SEIA
 		public Int64 TotalFlaws()
 		{
 			this.OpenConn();
-			string query = "SELECT count(\"SEAI\".\"Flaws\".\"ID\"), \"SEAI\".\"Equipments\".\"ID\" FROM public.flaws GROUP BY equipmentid ORDER BY count(flawID) DESC";
+			string query = "SELECT count(\"SEAI\".\"Flaws\".\"ID\"), \"SEAI\".\"Equipments\".\"ID\" " +
+				"FROM public.flaws GROUP BY equipmentid ORDER BY count(flawID) DESC";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			NpgsqlDataReader dr = cmd.ExecuteReader();
 
 			while (dr.Read())
 			{
-				maxNflaws = dr.GetInt64(0);
+				maxNflaws = dr.GetInt32(0);
 				break;
 			}
 
 			this.CloseConn();
 			return maxNflaws;
 		}
-		// (!)
-		/*
-		//n de disparos do dijuntor
-		public int SearchNumberShots(int ID){
-			this.Connect ();
-			string query = "SELECT nshots FROM components WHERE componentID = " + ID;
-			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
-			var reader = cmd.ExecuteReader();
-			nShots = int.Parse (reader.ToString ());
-			this.CloseConnection ();
-			return nShots;
-		}
-
-		//n de meses desde a ultima operacao(disparo)
-		public int SearchMonthsLastOp(){
-			this.Connect ();
-			string query = "SELECT";
-			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
-			var reader = cmd.ExecuteReader();
-			nMonths = int.Parse (reader.ToString ());
-			this.CloseConnection ();
-			return nMonths;
-		}
-
-		//n maximo de disparos em todos os dijuntores
-		public int SearchMaxNumberShots(){
-			this.Connect ();
-			string query = "SELECT";
-			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
-			var reader = cmd.ExecuteReader();
-			maxNshots = int.Parse (reader.ToString ());
-			this.CloseConnection ();
-			return maxNshots;
-		}*/
 
 
 		/********************************** Edition Functions **********************************/
 		//Adicionar/Remover Falha (!)
-		public void insertFlaw(int flawID, int equipmentID, int cause, int seriousness){
-			/*
-			 * INSERT INTO "SEAI"."Flaws" ("EquipmentID", "Cause", "Seriousness")
-VALUES (2,2,4); */
+		public int insertFlaw(int equipmentID, int cause, int seriousness){
+			this.OpenConn();
+			if (VerifyId(equipmentID, "Equipments") == false)
+			{
+				this.CloseConn();
+				return -1;
+			}
+
+			string query = $"INSERT INTO \"SEAI\".\"Flaws\" (\"EquipmentID\", \"Cause\", \"Seriousness\") VALUES ({equipmentID},{cause},{seriousness}); ";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			cmd.ExecuteNonQuery();
+			Console.WriteLine($"Foi inserida a falha com sucesso");
+			this.CloseConn();
+			return 0;
 		}
 
-		public void removeFlaw(int flawID){
+		public int removeFlaw(int flawID){
+			this.OpenConn();
+			if (VerifyId(flawID, "Flaws") == false)
+			{
+				this.CloseConn();
+				return -1;
+			}
 
+			string query = $"DELETE FROM \"SEAI\".\"Flaws\" WHERE \"Flaws\".\"ID\" = {flawID};";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			cmd.ExecuteNonQuery();
+			Console.WriteLine($"Foi removida a falha com sucesso.");
+			this.CloseConn();
+			return 0;
 		}
 			
 		//Adicionar/Remover Equipamento (!)
@@ -194,13 +183,20 @@ VALUES (2,2,4); */
 			this.CloseConn();
 		}
 
-		public void removeEquipment(int equipmentID){
+		public int removeEquipment(int equipmentID){
 			this.OpenConn();
+			if (VerifyId(equipmentID, "Equipments") == false)
+			{
+				this.CloseConn();
+				return -1;
+			}
+
 			string query = $"DELETE FROM \"SEAI\".\"Equipments\" WHERE \"Equipments\".\"ID\" = {equipmentID};";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			cmd.ExecuteNonQuery();
 			Console.WriteLine($"Foi removido o equipamento com o ID {equipmentID}.");
 			this.CloseConn();
+			return 0;
 		}
 
 		//Atualizar Equipamento (!)
