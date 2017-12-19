@@ -8,6 +8,7 @@ namespace SEIA
 	{
 		NpgsqlConnection conn = new NpgsqlConnection("Server=db.fe.up.pt;Port=5432;UserId=up201306445;Password=obaptisteegay;Database=up201306445;");
 		Int64 age, maxNflaws;
+		Int32 nRows;
 
 		/********************************** Basic Functions **********************************/
 		// Abre coneção
@@ -70,6 +71,8 @@ namespace SEIA
 
 		}
 
+		//returnar mmatriz com as falhas que ocorerao numa componente
+
 
 		/********************************** Query Functions **********************************/
 		// Nº de falhas de um equipamento, retorna -1 se não existir o equipamento
@@ -105,7 +108,7 @@ namespace SEIA
 				return -1;
 			}
 
-			string query = $"SELECT \"Year\" FROM \"SEAI\".\"Equipments\" WHERE \"Equipments\".\"ID\" = {id}";
+			string query = $"SELECT \"xAge\" FROM \"SEAI\".\"Equipments\" WHERE \"Equipments\".\"ID\" = {id}";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			NpgsqlDataReader dr = cmd.ExecuteReader();
 
@@ -124,7 +127,7 @@ namespace SEIA
 		{
 			this.OpenConn();
 			string query = "SELECT count(\"SEAI\".\"Flaws\".\"ID\"), \"SEAI\".\"Equipments\".\"ID\" " +
-				"FROM public.flaws GROUP BY equipmentid ORDER BY count(flawID) DESC";
+				"FROM \"SEAI\".\"Flaws\" GROUP BY equipmentid ORDER BY count(flawID) DESC";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			NpgsqlDataReader dr = cmd.ExecuteReader();
 
@@ -138,11 +141,36 @@ namespace SEIA
 			return maxNflaws;
 		}
 
-		//Pesquisar Maximo de operações (datasheet)
-		//Pesquisar Maximo de ativações (datasheet)
-		//Pesquisar Nºativações
-		//Pesquisar Nºoperações
-	
+		public string[,] SearchFlawsTable(int equipmentID){
+			this.OpenConn();
+
+			string query = "SELECT Count(\"SEAI\".\"Flaws\".\"ID\")" +
+				"FROM \"SEAI\".\"Flaws\" WHERE \"Flaws\".\"EquipmentID\" = {equipmentID}";
+			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+			NpgsqlDataReader dr = cmd.ExecuteReader();
+
+
+			while (dr.Read())
+			{
+				nRows = dr.GetInt32(0);
+				break;
+			}
+			String[,] table = new string[nRows,5];
+
+			query = "SELECT * " +
+				"FROM \"SEAI\".\"Flaws\" WHERE \"Flaws\".\"EquipmentID\" = {equipmentID}";
+			cmd = new NpgsqlCommand(query, conn);
+			dr = cmd.ExecuteReader();
+
+
+			int i = 0;
+			while (dr.Read ()) {
+				dr[0].
+			}
+
+			this.CloseConn();
+			return table;
+		}
 
 
 		/********************************** Edition Functions **********************************/
@@ -155,7 +183,7 @@ namespace SEIA
 				return -1;
 			}
 
-			string query = $"INSERT INTO \"SEAI\".\"Flaws\" (\"EquipmentID\", \"Cause\", \"Seriousness\") VALUES ({equipmentID},{cause},{seriousness}); ";
+			string query = $"INSERT INTO \"SEAI\".\"Flaws\" (\"EquipmentID\", \"CauseID\", \"Seriousness\") VALUES ({equipmentID},{cause},{seriousness}); ";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			cmd.ExecuteNonQuery();
 			Console.WriteLine($"Foi inserida a falha com sucesso");
@@ -182,7 +210,7 @@ namespace SEIA
 		//Adicionar/Remover Equipamento (!)
 		public void insertEquipment(int type, String name, int year, int maxact, int maxope){
 			this.OpenConn();
-			string query = $"INSERT INTO \"SEAI\".\"Equipments\" (\"Type\", \"Name\", \"Year\",\"MaxActivations\",\"MaxOperations\") VALUES ({type},'{name}',{year},{maxact},{maxope});";
+			string query = $"INSERT INTO \"SEAI\".\"Equipments\" (\"Type\", \"Name\", \"xAge\",\"MaxActivations\",\"MaxOperations\") VALUES ({type},'{name}',{year},{maxact},{maxope});";
 			NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
 			cmd.ExecuteNonQuery();
 			Console.WriteLine($"Foi inserido equipamento {name}, do tipo {type}, do ano de {year}, com maxino de ativações {maxact} e operações {maxope}.");
@@ -271,14 +299,6 @@ namespace SEIA
 
 		//Atualizar Equipamento (!)
 
-		//Adicionar/Remover Sample (!)
-		public void insertSample(){
-
-		}
-
-		public void removeSample(int sampleID){
-
-		}
 
 		/********************************** E N D **********************************/
 

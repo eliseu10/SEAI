@@ -21,7 +21,7 @@ namespace SEIA
 
 			dbconnect.insertLastUseDate (3,"10.02.2010 12:02:59");
 
-			dbconnect.insertFlaw (3,1,3);
+			dbconnect.insertFlaw (3,0,3);
 			dbconnect.removeFlaw (2);
 
 			// Teste nº falhas equipamentos 1 ao 4
